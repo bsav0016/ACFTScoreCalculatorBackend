@@ -1,0 +1,1 @@
+web: gunicorn newAcftScoreCalculator.wsgi --log-file -
