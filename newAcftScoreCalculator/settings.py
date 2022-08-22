@@ -17,7 +17,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['192.168.1.230', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['updated-acft-score-calculator.herokuapp.com']
 
 # Application definition
 
