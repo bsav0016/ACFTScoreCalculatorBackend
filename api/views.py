@@ -38,12 +38,13 @@ class PaymentSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST'])
     def payment_sheet(self, request, pk=None):
-        stripe.api_key = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc'
+        #stripe.api_key = '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'
+        stripe.api_key = 'sk_test_51K3Z43KQPt6SvxbCmbi7icHFk4ia68Q6jwxQMxOwvWBS4NoJ64zUBiAfhKwHoiWSNTeZiWyVV7sdDePXH4Sbbiti00Kpwyl8X6'
         # Use an existing Customer ID if this is a returning customer
         customer = stripe.Customer.create()
         ephemeralKey = stripe.EphemeralKey.create(
             customer=customer['id'],
-            stripe_version='2022-08-01',
+            stripe_version='2022-11-15',
         )
         paymentIntent = stripe.PaymentIntent.create(
             amount=240,
@@ -57,11 +58,13 @@ class PaymentSheetViewSet(viewsets.ModelViewSet):
             payment_sheet = PaymentSheet(payment_intent=paymentIntent.client_secret,
                    ephemeral_key=ephemeralKey.secret,
                    customer=customer.id,
-                   publishable_key='pk_test_TYooMQauvdEDq54NiTphI7jx')
-            serializer = PaymentSheetSerializer(payment_sheet, many=False)
+                   publishable_key='pk_test_51K3Z43KQPt6SvxbCh8qXBdDA7qwDks6GdTEQTdoTTyGihNGIFl4wwDn7HPOzPiCGvEFdyT0gtuotwzvP3ldThVG700vB1jcAfO')
+                   #publishable_key='pk_live_51K3Z43KQPt6SvxbCHOvCFO2f29mLPeJsKvdOyDbQzewBBeIrwIzdcxwgXskRJsBRMSL5olg5cZ6BhvyyoPq0dpUx00GG4L0uUy')
+            #serializer = PaymentSheetSerializer(payment_sheet, many=False)
             response = {'message': 'Stored Payment Sheet', 'customerId': customer.id, 'ephemeralKey':
                         ephemeralKey.secret, 'paymentIntent': paymentIntent.client_secret, 'publishableKey':
-                        'pk_test_TYooMQauvdEDq54NiTphI7jx'}
+                        'pk_test_51K3Z43KQPt6SvxbCh8qXBdDA7qwDks6GdTEQTdoTTyGihNGIFl4wwDn7HPOzPiCGvEFdyT0gtuotwzvP3ldThVG700vB1jcAfO'}
+                        #'pk_live_51K3Z43KQPt6SvxbCHOvCFO2f29mLPeJsKvdOyDbQzewBBeIrwIzdcxwgXskRJsBRMSL5olg5cZ6BhvyyoPq0dpUx00GG4L0uUy'}
             PaymentSheet.save(payment_sheet)
             return Response(response, status=status.HTTP_200_OK)
         except Exception as e:
