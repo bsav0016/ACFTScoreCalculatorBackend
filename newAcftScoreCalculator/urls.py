@@ -3,8 +3,9 @@ from django.urls import path
 from django.conf.urls import include
 from rest_framework.authtoken.views import obtain_auth_token
 
+
 urlpatterns = [
+    path('api/', include('api.urls')),
     path('admin/', admin.site.urls),
     path('auth/', obtain_auth_token),
-    path('api/', include('api.urls'))
 ]
