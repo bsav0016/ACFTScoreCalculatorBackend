@@ -59,7 +59,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def update_user(self, username, email, first_name, last_name, password, acft_results=[], paid_fee=False):
+    def update_user(self, username, email, first_name, last_name, password, acft_results=[], paid_fee=True):
         """
         Updates and saves a User with the given email and password.
         """
@@ -106,7 +106,7 @@ class User(AbstractBaseUser):
         unique=False
     )
 
-    paid_fee = models.BooleanField(default=False, blank=True)
+    paid_fee = models.BooleanField(default=True, blank=True)
 
     def get_full_name(self):
         return self.first_name + self.last_name
