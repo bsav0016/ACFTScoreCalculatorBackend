@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 
 import stripe
 
-stripe_secret = None #'sk_test_51K3Z43KQPt6SvxbCjTGvjsVfI8ffqhJBQn1jE96shUOAUgcBjCiE9XVWCrKXu0DgDRbIAcB6AE9QQ8iszGu3nFEE00S4yQdUTL'
+stripe_secret = None #TODO: Add secret key in here
 class CustomObtainAuthToken(ObtainAuthToken):
     permission_classes = (AllowAny,)
     authentication_classes = (TokenAuthentication,)
