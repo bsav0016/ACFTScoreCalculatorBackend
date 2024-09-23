@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 
 import stripe
 
-
+stripe_secret = None #'sk_test_51K3Z43KQPt6SvxbCjTGvjsVfI8ffqhJBQn1jE96shUOAUgcBjCiE9XVWCrKXu0DgDRbIAcB6AE9QQ8iszGu3nFEE00S4yQdUTL'
 class CustomObtainAuthToken(ObtainAuthToken):
     permission_classes = (AllowAny,)
     authentication_classes = (TokenAuthentication,)
@@ -38,7 +38,7 @@ class PaymentSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST'])
     def payment_sheet(self, request, pk=None):
-        stripe.api_key = 'sk_test_51K3Z43KQPt6SvxbCjTGvjsVfI8ffqhJBQn1jE96shUOAUgcBjCiE9XVWCrKXu0DgDRbIAcB6AE9QQ8iszGu3nFEE00S4yQdUTL'
+        stripe.api_key = stripe_secret
         # Use an existing Customer ID if this is a returning customer
         customer = stripe.Customer.create()
         ephemeralKey = stripe.EphemeralKey.create(
