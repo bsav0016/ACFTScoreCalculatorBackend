@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 
 import stripe
 
-stripe_secret = None #TODO: Add secret key in here
+
 class CustomObtainAuthToken(ObtainAuthToken):
     permission_classes = (AllowAny,)
     authentication_classes = (TokenAuthentication,)
@@ -38,7 +38,7 @@ class PaymentSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST'])
     def payment_sheet(self, request, pk=None):
-        stripe.api_key = stripe_secret
+        #TODO: Add this back in: stripe.api_key = None
         # Use an existing Customer ID if this is a returning customer
         customer = stripe.Customer.create()
         ephemeralKey = stripe.EphemeralKey.create(
