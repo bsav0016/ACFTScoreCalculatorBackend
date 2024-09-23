@@ -38,7 +38,7 @@ class PaymentSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['POST'])
     def payment_sheet(self, request, pk=None):
-        #TODO: Add this back in: stripe.api_key = None
+        stripe.api_key = None #TODO: Use test secret here
         # Use an existing Customer ID if this is a returning customer
         customer = stripe.Customer.create()
         ephemeralKey = stripe.EphemeralKey.create(
