@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
+            paid_fee=True
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -59,7 +60,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def update_user(self, username, email, first_name, last_name, password, acft_results=[], paid_fee=False):
+    def update_user(self, username, email, first_name, last_name, password, acft_results=[], paid_fee=True):
         """
         Updates and saves a User with the given email and password.
         """
@@ -92,7 +93,7 @@ class User(AbstractBaseUser):
         unique=True,
         default=''
     )
-    staff = models.BooleanField(default=False)  # a admin user; non super-user
+    staff = models.BooleanField(default=False)  # an admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
 
     first_name = models.CharField(
