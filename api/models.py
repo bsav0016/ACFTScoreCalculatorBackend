@@ -168,13 +168,6 @@ class ACFTResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='acft_results')
 
 
-class PaymentSheet(models.Model):
-    payment_intent = models.CharField(default='', blank=False, max_length=255)
-    ephemeral_key = models.CharField(default='', blank=False, max_length=255)
-    customer = models.CharField(default='', blank=False, max_length=255)
-    publishable_key = models.CharField(default='', blank=False, max_length=255)
-
-
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:

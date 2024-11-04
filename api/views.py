@@ -3,14 +3,12 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import ACFTResult, PaymentSheet
-from .serializers import ACFTResultSerializer, UserSerializer, PaymentSheetSerializer
+from .models import ACFTResult
+from .serializers import ACFTResultSerializer, UserSerializer
 from django.contrib.auth import get_user_model
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
-
-import stripe
 
 
 class CustomObtainAuthToken(ObtainAuthToken):
@@ -28,46 +26,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
     authentication_classes = (TokenAuthentication, )
-
-
-class PaymentSheetViewSet(viewsets.ModelViewSet):
-    queryset = PaymentSheet.objects.all()
-    serializer_class = PaymentSheetSerializer
-    permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication,)
-
-    @action(detail=True, methods=['POST'])
-    def payment_sheet(self, request, pk=None):
-        stripe.api_key = None #TODO: Use test secret here
-        # Use an existing Customer ID if this is a returning customer
-        customer = stripe.Customer.create()
-        ephemeralKey = stripe.EphemeralKey.create(
-            customer=customer['id'],
-            stripe_version='2022-11-15',
-        )
-        paymentIntent = stripe.PaymentIntent.create(
-            amount=240,
-            currency='usd',
-            customer=customer['id'],
-            automatic_payment_methods={
-                'enabled': True,
-            },
-        )
-        try:
-            payment_sheet = PaymentSheet(payment_intent=paymentIntent.client_secret,
-                   ephemeral_key=ephemeralKey.secret,
-                   customer=customer.id,
-                   publishable_key='pk_test_51K3Z43KQPt6SvxbCq2DWQAxjj2fSskBhazWMiBI4WM6XRgOoDUSckkHxZzWaSXgIO55qf3EAi0lo2X4iab44nHIl00amJ9PVxZ')
-            #serializer = PaymentSheetSerializer(payment_sheet, many=False)
-            response = {'message': 'Stored Payment Sheet', 'customerId': customer.id, 'ephemeralKey':
-                        ephemeralKey.secret, 'paymentIntent': paymentIntent.client_secret, 'publishableKey':
-                        'pk_test_51K3Z43KQPt6SvxbCq2DWQAxjj2fSskBhazWMiBI4WM6XRgOoDUSckkHxZzWaSXgIO55qf3EAi0lo2X4iab44nHIl00amJ9PVxZ'}
-            PaymentSheet.save(payment_sheet)
-            return Response(response, status=status.HTTP_200_OK)
-        except Exception as e:
-            response = {'message': "Sorry, this didn't work"}
-            print(e)
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ACFTResultViewSet(viewsets.ModelViewSet):
